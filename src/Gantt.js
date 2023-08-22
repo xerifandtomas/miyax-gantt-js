@@ -138,7 +138,10 @@ export class GanttChart {
             style="grid-column: ${start + 2} / ${end + 2};"
             draggable="${isDraggable}"
           >
-          <span style="${bgColor}">
+          <span
+            style="${bgColor}"
+            data-id="${id}"
+          >
             ${text}
             </span>
           </div>`
