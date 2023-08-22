@@ -1,10 +1,11 @@
 {
   "name": "@miyax/ganttjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An open source gantt chart for the web",
   "main": "index.js",
   "author": "José Antonio Sánchez Román <xerifandtomas@hotmail.com>",
   "license": "MIT",
+  "type": "module",
   "keywords": [
     "gantt",
     "gantt chart",
