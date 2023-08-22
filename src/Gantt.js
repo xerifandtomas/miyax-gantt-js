@@ -43,7 +43,7 @@ export class GanttChart {
     return this
   }
 
-  task(tasks) {
+  tasks(tasks) {
     this.__tasks = tasks
     return this
   }

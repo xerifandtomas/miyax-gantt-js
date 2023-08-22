@@ -1,4 +1,4 @@
-import { GanttChart } from "../src/Gantt.js"
+import GanttChart from "../src/index.js"
 import ES from "../src/lang/es.js"
 
 const tasks = [
@@ -41,7 +41,7 @@ const gantt = new GanttChart();
 gantt
   .widthHeader('350px')
   .i18n(ES)
-  .task(tasks)
+  .tasks(tasks)
   .element(ganttChartId)
   .period(startGanttChart, endGanttChart)
   .withWeekDays()

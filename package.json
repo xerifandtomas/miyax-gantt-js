@@ -6,6 +6,7 @@
   "author": "José Antonio Sánchez Román <xerifandtomas@hotmail.com>",
   "license": "MIT",
   "type": "module",
+  "types": "./types/index.d.ts",
   "keywords": [
     "gantt",
     "gantt chart",

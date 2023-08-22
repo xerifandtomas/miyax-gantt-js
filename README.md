@@ -14,7 +14,8 @@ Create a html element
 ```
 
 ```javascript
-import { GanttChart } from 'miyax-gantt-chart'
+import { GanttChart } from '@miyax/ganttjs'
+import '@miyax/ganttjs/src/theme/default.css'
 
 // Define the tasks
 const tasks = [
@@ -42,7 +43,7 @@ const gantt = new GanttChart() // or new GanttChart(ganttChartHtmlElement)
 gantt
   .element(ganttChartHtmlElement) // set the element
   .period(startGanttChart, endGanttChart) // show the period from 2023/08/01 to 2023/08/31
-  .task(tasks) // add the tasks
+  .tasks(tasks) // add the tasks
   .render() // render the gantt chart
 
 
@@ -51,7 +52,7 @@ gantt
 gantt
   .element(ganttChartHtmlElement) // set the element
   .period(startGanttChart, endGanttChart) // show the period from 2023/08/01 to 2023/08/31
-  .task(tasks) // add the tasks
+  .tasks(tasks) // add the tasks
   .widthHeader('350px') // set the width of the header
   .withWeekDays() // show the week days
   .withMonthDay() // show the month day
