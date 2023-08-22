@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <script src="./index.js" type="module" defer></script>
+    <link rel="stylesheet" href="../src/theme/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap" rel="stylesheet" />
+    <title>Miyax Gantt Chart - Vanilla JavaScript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        html {
+            font-family: 'Montserrat', sans-serif;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-family: "Montserrat", sans-serif;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Miyax Gantt Chart - Vanilla JavaScript</h1>
+    <form action="#" id="form-date">
+        <input type="date" id="start" name="trip-start" value="2023-08-01">
+        <input type="date" id="end" name="trip-end" value="2023-08-31">
+        <button type="submit">Update</button>
+    </form>
+
+    <div role="gantt-chart" id="gantt-chart-id" class="gantt-chart__container"></div>
+</body>
+
+</html>

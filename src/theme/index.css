@@ -1,0 +1,46 @@
+.gantt-chart__container {
+    display: grid;
+    overflow-x: auto;
+    row-gap: .1rem;
+}
+
+.gantt-chart__row-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: 0.5px solid #ccc5;
+    min-width: 3rem;
+}
+
+.gantt-chart__row-cell > span {
+    padding: 0.5rem;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+}
+
+.gantt-chart__row-cell--header {
+    outline: none;
+    box-sizing: border-box;
+    border-right: 1px solid #ccc5;
+}
+
+.gantt-chart__row-cell--month {
+    background-color: #f5f5f5;
+}
+
+.gantt-chart__row-cell--day-of-weekend {
+    background-color: #ecebeb;
+}
+
+.gantt-chart__row-cell--task {
+    background: transparent;
+}
+
+.gantt-chart__row-cell--task > span {
+    border-radius: 5px;
+    z-index: 1;
+}
