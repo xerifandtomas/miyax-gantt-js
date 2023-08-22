@@ -4,7 +4,14 @@ An open source gantt chart for the web
 
 ## Installation
 
-TODO
+```bash
+npm i @miyax/ganttjs
+```
+or
+
+```bash
+yarn add @miyax/ganttjs
+```
 
 ## Usage
 
@@ -79,4 +86,85 @@ Events
 ```javascript
 // Selected task
 ganttChartId.addEventListener("selected", (e) => console.log('Task selected', e.detail))
+```
+
+
+Example VUE
+```html
+<template>
+  <main>
+    <form @submit.prevent="update" class="form">
+      <input type="date" v-model="start" />
+      <input type="date" v-model="end" />
+      <button type="submit">Update</button>
+    </form>
+
+    <div ref="gantt" @selected="selectedTask"></div>
+  </main>
+</template>
+<script>
+import GanttChart from '@miyax/ganttjs'
+import '@miyax/ganttjs/src/theme/default.css'
+import ES from '@miyax/ganttjs/src/lang/es'
+
+const tasks = [
+  {
+    id: "1",
+    name: "Hello world!!",
+    start: new Date("2023/08/1"),
+    end: new Date("2023/08/10"),
+    color: "#a3d8a3",
+  },
+  {
+    id: "2",
+    name: "¡¡Hola mundo!!",
+    start: new Date("2023/08/9"),
+    end: new Date("2023/08/21"),
+    color: "#2ade3c",
+    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+  },
+]
+const gantt = new GanttChart()
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      start: '2023-08-01',
+      end: '2023-08-31'
+    }
+  },
+  mounted() {
+    gantt
+      .element(this.$refs.gantt)
+      .tasks(tasks)
+      .period(new Date("2023/08/01"), new Date("2023/08/31"))
+      .widthHeader('350px')
+      .withWeekDays()
+      .withMonthDay()
+      .i18n(ES)
+      .render()
+  },
+  methods: {
+    update() {
+      const start = new Date(this.start)
+      const end = new Date(this.end)
+      gantt.period(start, end)
+        .render()
+    },
+    selectedTask(task) {
+      console.log(task.detail)
+    },
+  }
+}
+</script>
+<style scoped>
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+</style>
 ```
