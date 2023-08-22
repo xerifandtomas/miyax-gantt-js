@@ -7,6 +7,8 @@
   "license": "MIT",
   "type": "module",
   "types": "./types/index.d.ts",
+  "repository": "https://github.com/xerifandtomas/miyax-gantt-js" ,
+  "homepage": "https://github.com/xerifandtomas/miyax-gantt-js#readme",
   "keywords": [
     "gantt",
     "gantt chart",
