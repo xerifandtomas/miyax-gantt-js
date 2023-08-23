@@ -183,9 +183,9 @@ export class GanttChart {
   __generateHeader() {
     if (!this.__isActiveWeekDays && !this.__isActiveMonthDays && !this.__isActiveYearMonths) return
 
-    const dayOfMonthCells = [this.__createCellTemplate(-1, 0, this.__translations.daysTile, 'header')]
-    const dayOfWeekCells = [this.__createCellTemplate(-1, 0, this.__translations.dayOfweekTile, 'header')]
-    const monthCells = [this.__createCellTemplate(-1, 0, this.__translations.monthsTile, 'header')]
+    const dayOfMonthCells = [this.__createCellTemplate(-1, 0, this.__translations.daysTitle, 'header')]
+    const dayOfWeekCells = [this.__createCellTemplate(-1, 0, this.__translations.dayOfweekTitle, 'header')]
+    const monthCells = [this.__createCellTemplate(-1, 0, this.__translations.monthsTitle, 'header')]
     const countDaysMonths = {}
     const months = []
     let lastMonth = null

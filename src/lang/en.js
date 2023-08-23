@@ -22,7 +22,7 @@ export default {
     november: 'November',
     december: 'December',
   },
-  monthsTile: 'Months',
-  daysTile: 'Days',
-  dayOfweekTile: 'Days of week',
+  monthsTitle: 'Months',
+  daysTitle: 'Days',
+  dayOfweekTitle: 'Days of week',
 }

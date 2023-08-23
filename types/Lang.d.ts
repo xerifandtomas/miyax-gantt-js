@@ -22,7 +22,7 @@ export type Lang = {
     november: string;
     december: string;
   }
-  monthsTile: string;
-  daysTile: string;
-  dayOfweekTile: string;
+  monthsTitle: string;
+  daysTitle: string;
+  dayOfweekTitle: string;
 }
