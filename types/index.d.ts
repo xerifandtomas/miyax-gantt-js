@@ -1,4 +1,3 @@
-export default GanttChart;
-import { GanttChart } from "./Gantt.js";
-
-const Gantt = new GanttChart()
+export { GanttChart } from "./Gantt"
+export { Lang as ES } from "./Lang"
+export { Lang as EN } from "./Lang"

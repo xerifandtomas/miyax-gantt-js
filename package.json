@@ -1,13 +1,13 @@
 {
   "name": "@miyax/ganttjs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "An open source gantt chart for the web",
   "main": "./src/index.js",
   "author": "José Antonio Sánchez Román <xerifandtomas@hotmail.com>",
   "license": "MIT",
   "type": "module",
   "types": "./types/index.d.ts",
-  "repository": "https://github.com/xerifandtomas/miyax-gantt-js" ,
+  "repository": "https://github.com/xerifandtomas/miyax-gantt-js",
   "homepage": "https://github.com/xerifandtomas/miyax-gantt-js#readme",
   "keywords": [
     "gantt",
@@ -19,5 +19,12 @@
     "web",
     "miyax",
     "miyax gantt"
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0"
+  }
 }

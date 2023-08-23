@@ -1,5 +1,5 @@
-import { calculateDays, addDays, DAYS_OF_WEEK_ARRAY, MONTHS_OF_YEAR_ARRAY } from "./Utils.js"
-import translate from "./lang/en.js"
+import { calculateDays, addDays, DAYS_OF_WEEK_ARRAY, MONTHS_OF_YEAR_ARRAY } from './Utils.js'
+import translate from '../lang/en.js'
 
 export class GanttChart {
   __translations = translate
@@ -15,13 +15,12 @@ export class GanttChart {
   __template = ''
 
   TYPE_CELL = {
-    task: "gantt-chart__row-cell--task",
-    header: "gantt-chart__row-cell--header",
-    weekend: "gantt-chart__row-cell--day-of-weekend",
-    day: "gantt-chart__row-cell--day",
-    month: "gantt-chart__row-cell--month",
+    header: 'gantt-chart__row-cell--header',
+    day: 'gantt-chart__row-cell--day',
+    weekend: 'gantt-chart__row-cell--day gantt-chart__row-cell--day-of-weekend',
+    month: 'gantt-chart__row-cell--month',
+    task: 'gantt-chart__row-cell--task',
   }
-
 
   constructor(element = null) {
     if (element) {
@@ -56,8 +55,8 @@ export class GanttChart {
       throw new Error('Start must be less than end')
     }
 
-    this.__startGanttChart = start;
-    this.__endGanttChart = end;
+    this.__startGanttChart = start
+    this.__endGanttChart = end
     this.__showPeriodDays = calculateDays(start, end)
     return this
   }
@@ -117,7 +116,7 @@ export class GanttChart {
   }
 
   __createCellTemplate(start, end, text, type, color) {
-    const bgColor = color ? `background: linear-gradient(90deg, ${color}33 0%, ${color} 100%);` : ""
+    const bgColor = color ? `background: linear-gradient(90deg, ${color}33 0%, ${color} 100%);` : ''
     return `
           <div
             class="gantt-chart__row-cell ${this.TYPE_CELL[type]}"
@@ -130,7 +129,7 @@ export class GanttChart {
   }
 
   __createCellTaskTemplate(id, start, end, text, type, color, isDraggable = false) {
-    const bgColor = color ? `background: linear-gradient(90deg, ${color}99 0%, ${color} 100%);` : ""
+    const bgColor = color ? `background: linear-gradient(90deg, ${color}99 0%, ${color} 100%);` : ''
     return `
           <div
             data-id="${id}"
@@ -148,8 +147,7 @@ export class GanttChart {
   }
 
   __createRowTemplate(cells, quantity) {
-    const length = quantity ? quantity : cells.length - 1
-    return cells.join("")
+    return cells.join('')
   }
 
   __addToTemplate(template) {
@@ -159,19 +157,19 @@ export class GanttChart {
   __generateTaskRow() {
     this.__tasks.forEach((task) => {
       const taskDuration = calculateDays(task.start, task.end)
-      const rows = [this.__createCellTemplate(-1, 0, task.name, "header", task.color)]
+      const rows = [this.__createCellTemplate(-1, 0, task.name, 'header', task.color)]
 
       for (let i = 0; i < this.__showPeriodDays; i++) {
         const currentDate = addDays(this.__startGanttChart, i)
         if (task.start <= currentDate && task.end >= currentDate) {
           const text = task.description ? task.description : `${taskDuration}d`
-          const cell = this.__createCellTaskTemplate(task.id, i, i + taskDuration, text, "task", task.color, true)
+          const cell = this.__createCellTaskTemplate(task.id, i, i + taskDuration, text, 'task', task.color, true)
           rows.push(cell)
           i += taskDuration - 1
           continue
         }
 
-        const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? "weekend" : "day"
+        const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'day'
         const cell = this.__createCellTemplate(i, i, '', type)
         rows.push(cell)
       }
@@ -184,16 +182,16 @@ export class GanttChart {
   __generateHeader() {
     if (!this.__isActiveWeekDays && !this.__isActiveMonthDays && !this.__isActiveYearMonths) return
 
-    const dayOfMonthCells = [this.__createCellTemplate(-1, 0, this.__translations['daysTile'], "header")]
-    const dayOfWeekCells = [this.__createCellTemplate(-1, 0, this.__translations['dayOfweekTile'], "header")]
-    const monthCells = [this.__createCellTemplate(-1, 0, this.__translations['monthsTile'], "header")]
+    const dayOfMonthCells = [this.__createCellTemplate(-1, 0, this.__translations.daysTile, 'header')]
+    const dayOfWeekCells = [this.__createCellTemplate(-1, 0, this.__translations.dayOfweekTile, 'header')]
+    const monthCells = [this.__createCellTemplate(-1, 0, this.__translations.monthsTile, 'header')]
     const countDaysMonths = {}
     const months = []
     let lastMonth = null
     for (let i = 0; i < this.__showPeriodDays; i++) {
       const currentDate = addDays(this.__startGanttChart, i)
 
-      const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? "weekend" : "day"
+      const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'day'
       const dayCell = this.__createCellTemplate(i, i, currentDate.getDate(), type)
       dayOfMonthCells.push(dayCell)
 
@@ -215,7 +213,7 @@ export class GanttChart {
     months.forEach((month) => {
       if (countDaysMonths[month]) {
         const monthName = this.__translations.monthsOfYear[month]
-        const monthCellTemplate = this.__createCellTemplate(i, i + countDaysMonths[month], monthName, "month")
+        const monthCellTemplate = this.__createCellTemplate(i, i + countDaysMonths[month], monthName, 'month')
         monthCells.push(monthCellTemplate)
         i += countDaysMonths[month]
       }
