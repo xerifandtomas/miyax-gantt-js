@@ -33,6 +33,7 @@
             justify-content: center;
             align-items: center;
             padding: 1rem;
+            gap: 1rem;
         }
     </style>
 </head>
@@ -43,6 +44,7 @@
         <input type="date" id="start" name="trip-start" value="2023-08-01">
         <input type="date" id="end" name="trip-end" value="2023-08-31">
         <button type="submit">Update</button>
+        <button type="button" id="toggle-headers">Toggle headers</button>
     </form>
 
     <div role="gantt-chart" id="gantt-chart-id"></div>

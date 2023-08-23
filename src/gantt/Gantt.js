@@ -86,8 +86,8 @@ export class GanttChart {
     return this
   }
 
-  disableHeaders() {
-    this.__isActiveHeaders = false
+  showHeaders(isActive) {
+    this.__isActiveHeaders = isActive
     return this
   }
 
@@ -145,21 +145,21 @@ export class GanttChart {
     return new CustomEvent(eventName, { bubbles: true, detail: structuredClone(currentTask) })
   }
 
-  getWidthColumns() {
+  __getWidthColumns() {
     let width = this.__showPeriodDays
     if (this.__isActiveHeaders) width++
     if (this.__isActiveTime) width++
     return width
   }
 
-  getMatrixArea(width, height = 1) {
+  __getMatrixArea(width, height = 1) {
     const startColumn = this.__currentColumn
     const endColumn = this.__currentColumn + width
     const startRow = this.__currentRow
     const endRow = this.__currentRow + height
 
     this.__currentColumn = endColumn
-    if (this.__currentColumn > this.getWidthColumns()) {
+    if (this.__currentColumn > this.__getWidthColumns()) {
       this.__currentColumn = 1
       this.__currentRow = endRow
     }
@@ -168,7 +168,7 @@ export class GanttChart {
   }
 
   __createCellTemplateMatrix(length, text, type, color, id) {
-    const { startColumn, endColumn, startRow, endRow } = this.getMatrixArea(length, 1)
+    const { startColumn, endColumn, startRow, endRow } = this.__getMatrixArea(length, 1)
     const bgColor = color ? `background: linear-gradient(90deg, ${color}33 0%, ${color} 100%);` : ''
     const dataId = id ? `data-id="${id}"` : ''
     const typeClass = this.TYPE_CELL[type] ?? ''

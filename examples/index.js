@@ -78,3 +78,15 @@ btn.addEventListener('submit', (e) => {
 
 // @ts-ignore
 ganttChartId.addEventListener('selected', (e) => console.log(e.detail))
+
+const btnToggleHeaders = document.querySelectorAll('#toggle-headers')[0]
+let isActiveHeaders = true
+
+btnToggleHeaders.addEventListener('click', (e) => {
+  e.preventDefault()
+
+  isActiveHeaders = !isActiveHeaders
+  gantt
+    .showHeaders(isActiveHeaders)
+    .render()
+})

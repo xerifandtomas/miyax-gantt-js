@@ -70,7 +70,7 @@ gantt
   .withMonthDay() // show the month day
   .withYearMonths() // show the year months
   .withTime() // show the duration of the tasks
-  .disableHeaders() // disable the left headers
+  .showHeaders(false) // disable or enable the headers, default is true
   .i18n(ES) // set the language, default is EN
   .render() // render the gantt chart
 
@@ -106,6 +106,7 @@ ganttChartId.addEventListener("selected", (e) => console.log('Task selected', e.
       <input type="date" v-model="start" />
       <input type="date" v-model="end" />
       <button type="submit">Update</button>
+      <button type="button" @click="toggleHeaders">Toggle headers</button>
     </form>
 
     <div ref="gantt" @selected="selectedTask"></div>
@@ -140,6 +141,7 @@ export default {
   name: 'App',
   data() {
     return {
+      toggleHeaders: true,
       lastSelectedTask: {},
       start: '2023-08-01',
       end: '2023-08-31'
@@ -161,6 +163,11 @@ export default {
       const start = new Date(this.start)
       const end = new Date(this.end)
       gantt.period(start, end)
+        .render()
+    },
+    toggleHeaders() {
+      this.toggleHeaders = !this.toggleHeaders
+      gantt.showHeaders(this.toggleHeaders)
         .render()
     },
     selectedTask(task) {
