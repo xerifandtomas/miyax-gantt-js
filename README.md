@@ -141,7 +141,7 @@ export default {
   name: 'App',
   data() {
     return {
-      toggleHeaders: true,
+      toggleHeader: true,
       lastSelectedTask: {},
       start: '2023-08-01',
       end: '2023-08-31'
@@ -162,12 +162,14 @@ export default {
     update() {
       const start = new Date(this.start)
       const end = new Date(this.end)
-      gantt.period(start, end)
+      gantt
+        .period(start, end)
         .render()
     },
     toggleHeaders() {
-      this.toggleHeaders = !this.toggleHeaders
-      gantt.showHeaders(this.toggleHeaders)
+      this.toggleHeader = !this.toggleHeader
+      gantt
+        .showHeaders(this.toggleHeader)
         .render()
     },
     selectedTask(task) {
