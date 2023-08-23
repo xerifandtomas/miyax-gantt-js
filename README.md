@@ -101,6 +101,8 @@ ganttChartId.addEventListener("selected", (e) => console.log('Task selected', e.
     </form>
 
     <div ref="gantt" @selected="selectedTask"></div>
+
+    <div>{{ lastSelectedTask }}</div>
   </main>
 </template>
 <script>
@@ -130,6 +132,7 @@ export default {
   name: 'App',
   data() {
     return {
+      lastSelectedTask: {},
       start: '2023-08-01',
       end: '2023-08-31'
     }
@@ -153,6 +156,7 @@ export default {
         .render()
     },
     selectedTask(task) {
+      this.lastSelectedTask = task.detail
       console.log(task.detail)
     },
   }
