@@ -55,8 +55,8 @@ export class GanttChart {
       throw new Error('Start must be less than end')
     }
 
-    this.__startGanttChart = start
-    this.__endGanttChart = end
+    this.__startGanttChart = new Date(start.setHours(0, 0, 0, 0))
+    this.__endGanttChart = new Date(end.setHours(0, 0, 0, 0))
     this.__showPeriodDays = calculateDays(start, end)
     return this
   }
@@ -163,9 +163,10 @@ export class GanttChart {
         const currentDate = addDays(this.__startGanttChart, i)
         if (task.start <= currentDate && task.end >= currentDate) {
           const text = task.description ? task.description : `${taskDuration}d`
-          const cell = this.__createCellTaskTemplate(task.id, i, i + taskDuration, text, 'task', task.color, true)
+          const taskDurationShow = calculateDays(currentDate, task.end)
+          const cell = this.__createCellTaskTemplate(task.id, i, i + taskDurationShow, text, 'task', task.color, true)
           rows.push(cell)
-          i += taskDuration - 1
+          i += taskDurationShow - 1
           continue
         }
 
