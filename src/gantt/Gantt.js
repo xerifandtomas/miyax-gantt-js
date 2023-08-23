@@ -220,7 +220,6 @@ export class GanttChart {
       }
     })
 
-    console.log('countDaysMonths', countDaysMonths)
     const template = `
           ${this.__isActiveYearMonths ? this.__createRowTemplate(monthCells, this.__showPeriodDays) : ''}
           ${this.__isActiveMonthDays ? this.__createRowTemplate(dayOfMonthCells) : ''}
