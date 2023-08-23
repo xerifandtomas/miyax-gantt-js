@@ -55,14 +55,15 @@ gantt
 
 
 
-// Full options
+// All options
 gantt
   .element(ganttChartHtmlElement) // set the element
   .period(startGanttChart, endGanttChart) // show the period from 2023/08/01 to 2023/08/31
   .tasks(tasks) // add the tasks
-  .widthHeader('350px') // set the width of the header
+  .widthHeader('350px') // set the width of the header, default is 150px
   .withWeekDays() // show the week days
   .withMonthDay() // show the month day
+  .i18n(ES) // set the language, default is EN
   .render() // render the gantt chart
 
 
@@ -82,14 +83,14 @@ gantt
   .render() // update the gantt chart
 ```
 
-Events
+## Events
 ```javascript
-// Selected task
+// Selected task event
 ganttChartId.addEventListener("selected", (e) => console.log('Task selected', e.detail))
 ```
 
 
-Example VUE
+## Example VUE
 ```html
 <template>
   <main>
@@ -103,9 +104,8 @@ Example VUE
   </main>
 </template>
 <script>
-import GanttChart from '@miyax/ganttjs'
-import '@miyax/ganttjs/src/theme/default.css'
-import ES from '@miyax/ganttjs/src/lang/es'
+import { GanttChart, ES } from '@miyax/ganttjs'
+import '@miyax/ganttjs/src/themes/default.css'
 
 const tasks = [
   {
@@ -167,4 +167,39 @@ export default {
   gap: 1rem;
 }
 </style>
+```
+
+## I18n example
+
+Createa new object with the translations
+
+```js
+const ES = {
+  daysOfWeek: {
+    monday: 'Lunes',
+    tuesday: 'Martes',
+    wednesday: 'Miércoles',
+    thursday: 'Jueves',
+    friday: 'Viernes',
+    saturday: 'Sábado',
+    sunday: 'Domingo',
+  },
+  monthsOfYear: {
+    january: 'Enero',
+    february: 'Febrero',
+    march: 'Marzo',
+    april: 'Abril',
+    may: 'Mayo',
+    june: 'Junio',
+    july: 'Julio',
+    august: 'Agosto',
+    september: 'Septiembre',
+    october: 'Octubre',
+    november: 'Noviembre',
+    december: 'Diciembre',
+  },
+  monthsTile: 'Meses',
+  daysTile: 'Días',
+  dayOfweekTile: 'Días de la semana',
+}
 ```
