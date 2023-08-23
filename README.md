@@ -2,6 +2,10 @@
 
 An open source gantt chart for the web
 
+----
+
+![Gantt](https://github.com/xerifandtomas/miyax-gantt-js/blob/master/examples/gantt-example.png?raw=true)
+
 ## Installation
 
 ```bash
@@ -12,6 +16,7 @@ or
 ```bash
 yarn add @miyax/ganttjs
 ```
+
 
 ## Usage
 
