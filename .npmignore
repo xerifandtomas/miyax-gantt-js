@@ -1,4 +1,6 @@
 node_modules
 examples
-.eslintrc.js
+.eslintrc.*
 .vscode
+yarn-error.log
+yarn.lock
