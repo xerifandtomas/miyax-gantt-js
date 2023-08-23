@@ -11,15 +11,20 @@ export class GanttChart {
   __showPeriodDays = 0
   __isActiveWeekDays = false
   __isActiveMonthDays = false
-  __isActiveYearMonths = true
+  __isActiveYearMonths = false
+  __isActiveHeaders = true
+  __isActiveTime = false
   __template = ''
+  __currentColumn = 1
+  __currentRow = 1
 
   TYPE_CELL = {
-    header: 'gantt-chart__row-cell--header',
-    day: 'gantt-chart__row-cell--day',
-    weekend: 'gantt-chart__row-cell--day gantt-chart__row-cell--day-of-weekend',
-    month: 'gantt-chart__row-cell--month',
-    task: 'gantt-chart__row-cell--task',
+    header: 'gjs__cell-header',
+    day: 'gjs__row-cell--day',
+    weekend: 'gjs__cell-day gjs__cell-weekend',
+    month: 'gjs__cell-month',
+    task: 'gjs__cell-task',
+    time: 'gjs__row-cell--time',
   }
 
   constructor(element = null) {
@@ -71,6 +76,21 @@ export class GanttChart {
     return this
   }
 
+  withYearMonths() {
+    this.__isActiveYearMonths = true
+    return this
+  }
+
+  withTime() {
+    this.__isActiveTime = true
+    return this
+  }
+
+  disableHeaders() {
+    this.__isActiveHeaders = false
+    return this
+  }
+
   i18n(translations) {
     this.__translations = Object.assign({}, translate, translations)
     this.__translations.daysOfWeek = Object.assign({}, translate.daysOfWeek, translations.daysOfWeek)
@@ -79,17 +99,27 @@ export class GanttChart {
   }
 
   render() {
-    this.__template = ''
-    this.__generateHeader()
+    this.__resetTemplate()
+    this.__generateTimes()
     this.__generateTaskRow()
     this.__renderContainer()
 
     this.__addListeners()
   }
 
+  __resetTemplate() {
+    this.__template = ''
+    this.__currentRow = 1
+    this.__currentColumn = 1
+  }
+
   __renderContainer() {
+    const gridTemplateColumns = [
+      this.__isActiveHeaders ? this.__widthHeader : '',
+      `repeat(${this.__showPeriodDays}, 1fr)`,
+    ]
     const template = `
-      <div class="gantt-chart__container" style="grid-template-columns: ${this.__widthHeader} repeat(${this.__showPeriodDays}, 1fr)">
+      <div class="gjs__container"style="grid-template-columns: ${gridTemplateColumns.join(' ')}">
         ${this.__template}
       </div>`
 
@@ -101,7 +131,7 @@ export class GanttChart {
   }
 
   __addListeners() {
-    const cells = this.__element.querySelectorAll('.gantt-chart__row-cell--task')
+    const cells = this.__element.querySelectorAll('.gjs__cell-task')
     cells.forEach((cell) => {
       cell.addEventListener('click', (e) => {
         const event = this.__getCustomEvent(e.target.dataset.id, 'selected')
@@ -115,116 +145,138 @@ export class GanttChart {
     return new CustomEvent(eventName, { bubbles: true, detail: structuredClone(currentTask) })
   }
 
-  __createCellTemplate(start, end, text, type, color) {
+  getWidthColumns() {
+    let width = this.__showPeriodDays
+    if (this.__isActiveHeaders) width++
+    if (this.__isActiveTime) width++
+    return width
+  }
+
+  getMatrixArea(width, height = 1) {
+    const startColumn = this.__currentColumn
+    const endColumn = this.__currentColumn + width
+    const startRow = this.__currentRow
+    const endRow = this.__currentRow + height
+
+    this.__currentColumn = endColumn
+    if (this.__currentColumn > this.getWidthColumns()) {
+      this.__currentColumn = 1
+      this.__currentRow = endRow
+    }
+
+    return { startColumn, endColumn, startRow, endRow }
+  }
+
+  __createCellTemplateMatrix(length, text, type, color, id) {
+    const { startColumn, endColumn, startRow, endRow } = this.getMatrixArea(length, 1)
     const bgColor = color ? `background: linear-gradient(90deg, ${color}33 0%, ${color} 100%);` : ''
-    return `
+    const dataId = id ? `data-id="${id}"` : ''
+    const typeClass = this.TYPE_CELL[type] ?? ''
+
+    const template = `
           <div
-            class="gantt-chart__row-cell ${this.TYPE_CELL[type]}"
-            style="grid-column: ${start + 2} / ${end + 2}; ${bgColor};"
+            ${dataId}
+            class="gjs__row-cell ${typeClass}"
+            style="
+            grid-column: ${startColumn} / ${endColumn};
+            grid-row: ${startRow} / ${endRow};
+            ${bgColor}
+            "
           >
-            <span>
+            <span
+              ${dataId}
+            >
               ${text}
             </span>
           </div>`
-  }
 
-  __createCellTaskTemplate(id, start, end, text, type, color, isDraggable = false) {
-    const bgColor = color ? `background: linear-gradient(90deg, ${color}99 0%, ${color} 100%);` : ''
-    return `
-          <div
-            data-id="${id}"
-            class="gantt-chart__row-cell ${this.TYPE_CELL[type]}"
-            style="grid-column: ${start + 2} / ${end + 2};"
-            draggable="${isDraggable}"
-          >
-          <span
-            style="${bgColor}"
-            data-id="${id}"
-          >
-            ${text}
-            </span>
-          </div>`
-  }
-
-  __createRowTemplate(cells, quantity) {
-    return cells.join('')
-  }
-
-  __addToTemplate(template) {
     this.__template += template
   }
 
   __generateTaskRow() {
     this.__tasks.forEach((task) => {
       const taskDuration = calculateDays(task.start, task.end)
-      const rows = [this.__createCellTemplate(-1, 0, task.name, 'header', task.color)]
+      const rows = []
+      if (this.__isActiveHeaders) {
+        const cell = { quantity: 1, text: task.name, type: 'header', color: task.color, id: task.id }
+        rows.push(cell)
+      }
+
+      if (this.__isActiveTime) {
+        const timeCells = { quantity: 1, text: `${taskDuration}d`, type: 'time', id: task.id }
+        rows.push(timeCells)
+      }
 
       for (let i = 0; i < this.__showPeriodDays; i++) {
         const currentDate = addDays(this.__startGanttChart, i)
         if (task.start <= currentDate && task.end >= currentDate) {
           const text = task.description ? task.description : `${taskDuration}d`
           const taskDurationShow = calculateDays(currentDate, task.end)
-          const cell = this.__createCellTaskTemplate(task.id, i, i + taskDurationShow, text, 'task', task.color, true)
+          const cell = { quantity: taskDurationShow, text, type: 'task', color: task.color, id: task.id }
           rows.push(cell)
           i += taskDurationShow - 1
           continue
         }
 
         const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'day'
-        const cell = this.__createCellTemplate(i, i, '', type)
+        const cell = { quantity: 1, text: '', type }
         rows.push(cell)
       }
 
-      const template = this.__createRowTemplate(rows, this.__showPeriodDays)
-      this.__addToTemplate(template)
+      rows
+        .map(row => this.__createCellTemplateMatrix(row.quantity, row.text, row.type, row.color, row.id))
     })
   }
 
-  __generateHeader() {
+  __generateTimes() {
     if (!this.__isActiveWeekDays && !this.__isActiveMonthDays && !this.__isActiveYearMonths) return
 
-    const dayOfMonthCells = [this.__createCellTemplate(-1, 0, this.__translations.daysTitle, 'header')]
-    const dayOfWeekCells = [this.__createCellTemplate(-1, 0, this.__translations.dayOfweekTitle, 'header')]
-    const monthCells = [this.__createCellTemplate(-1, 0, this.__translations.monthsTitle, 'header')]
-    const countDaysMonths = {}
+    const dayOfMonthCells = []
+    const dayOfWeekCells = []
+    const monthCells = []
+    if (this.__isActiveHeaders) {
+      dayOfMonthCells.push({ quantity: 1, text: this.__translations.daysTitle, type: 'header' })
+      dayOfWeekCells.push({ quantity: 1, text: this.__translations.dayOfweekTitle, type: 'header' })
+      monthCells.push({ quantity: 1, text: this.__translations.monthsTitle, type: 'header' })
+    }
+
+    if (this.__isActiveTime) {
+      const timeColumn = { quantity: 1, text: '', type: null }
+      dayOfMonthCells.push(timeColumn)
+      dayOfWeekCells.push(timeColumn)
+      monthCells.push(timeColumn)
+    }
+
     const months = []
-    let lastMonth = null
     for (let i = 0; i < this.__showPeriodDays; i++) {
       const currentDate = addDays(this.__startGanttChart, i)
 
       const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'day'
-      const dayCell = this.__createCellTemplate(i, i, currentDate.getDate(), type)
-      dayOfMonthCells.push(dayCell)
+      dayOfMonthCells.push({ quantity: 1, text: currentDate.getDate(), type })
 
       const day = this.__translations.daysOfWeek[DAYS_OF_WEEK_ARRAY[currentDate.getDay()]]
-      const dayOfWeekCell = this.__createCellTemplate(i, i, day, type)
-      dayOfWeekCells.push(dayOfWeekCell)
+      dayOfWeekCells.push({ quantity: 1, text: day, type })
 
       const month = MONTHS_OF_YEAR_ARRAY[currentDate.getMonth()]
-      countDaysMonths[month] ??= 0
-      countDaysMonths[month]++
-
-      if (lastMonth !== month) {
-        months.push(month)
+      if (months[months.length - 1]?.name !== month) {
+        months.push({ name: month, quantity: 0 })
       }
-      lastMonth = month
+      months[months.length - 1].quantity++
     }
 
-    let i = 0
     months.forEach((month) => {
-      if (countDaysMonths[month]) {
-        const monthName = this.__translations.monthsOfYear[month]
-        const monthCellTemplate = this.__createCellTemplate(i, i + countDaysMonths[month], monthName, 'month')
-        monthCells.push(monthCellTemplate)
-        i += countDaysMonths[month]
-      }
+      const monthName = this.__translations.monthsOfYear[month.name]
+      monthCells.push({ quantity: month.quantity, text: monthName, type: 'month' })
     })
 
-    const template = `
-          ${this.__isActiveYearMonths ? this.__createRowTemplate(monthCells, this.__showPeriodDays) : ''}
-          ${this.__isActiveMonthDays ? this.__createRowTemplate(dayOfMonthCells) : ''}
-          ${this.__isActiveWeekDays ? this.__createRowTemplate(dayOfWeekCells) : ''}
-          `
-    this.__addToTemplate(template)
+    if (this.__isActiveYearMonths) {
+      monthCells.map(row => this.__createCellTemplateMatrix(row.quantity, row.text, row.type))
+    }
+    if (this.__isActiveMonthDays) {
+      dayOfMonthCells.map(row => this.__createCellTemplateMatrix(row.quantity, row.text, row.type))
+    }
+    if (this.__isActiveWeekDays) {
+      dayOfWeekCells.map(row => this.__createCellTemplateMatrix(row.quantity, row.text, row.type))
+    }
   }
 }

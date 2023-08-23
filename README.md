@@ -68,6 +68,9 @@ gantt
   .widthHeader('350px') // set the width of the header, default is 150px
   .withWeekDays() // show the week days
   .withMonthDay() // show the month day
+  .withYearMonths() // show the year months
+  .withTime() // show the duration of the tasks
+  .disableHeaders() // disable the left headers
   .i18n(ES) // set the language, default is EN
   .render() // render the gantt chart
 
