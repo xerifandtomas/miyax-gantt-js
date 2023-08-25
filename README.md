@@ -100,6 +100,9 @@ ganttChartId.addEventListener("selected", (e) => console.log('Task selected', e.
 
 
 ## Example VUE
+
+Sandbox example: https://codesandbox.io/s/dawn-browser-k66vzr?file=/src/App.vue
+
 ```html
 <template>
   <main>
