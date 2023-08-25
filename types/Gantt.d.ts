@@ -7,8 +7,12 @@ export class GanttChart {
   element(element: HTMLElement): this;
   tasks(tasks: TaskCollection): this;
   period(start: Date, end: Date): this;
+  todayTo(days: number): this;
   withWeekDays(): this;
   withMonthDay(): this;
+  withYearMonths(): this;
+  withTime(): this;
+  showHeaders(isActive: boolean): this;
   i18n(translations: Lang): this;
   render(): void;
 }
