@@ -50,6 +50,7 @@ gantt
   .tasks(tasks)
   .element(ganttChartId)
   .period(startGanttChart, endGanttChart)
+  // .todayTo(2)
   .withWeekDays()
   .withMonthDay()
   .withYearMonths()
@@ -88,5 +89,16 @@ btnToggleHeaders.addEventListener('click', (e) => {
   isActiveHeaders = !isActiveHeaders
   gantt
     .showHeaders(isActiveHeaders)
+    .render()
+})
+
+const btnToday = document.querySelectorAll('#today')[0]
+
+btnToday.addEventListener('click', (e) => {
+  e.preventDefault()
+
+  isActiveHeaders = !isActiveHeaders
+  gantt
+    .todayTo(20)
     .render()
 })

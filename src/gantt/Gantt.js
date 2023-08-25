@@ -21,6 +21,7 @@ export class GanttChart {
   TYPE_CELL = {
     header: 'gjs__cell-header',
     day: 'gjs__row-cell--day',
+    today: 'gjs__row-cell--day gjs__cell-today',
     weekend: 'gjs__cell-day gjs__cell-weekend',
     month: 'gjs__cell-month',
     task: 'gjs__cell-task',
@@ -63,6 +64,17 @@ export class GanttChart {
     this.__startGanttChart = new Date(start.setHours(0, 0, 0, 0))
     this.__endGanttChart = new Date(end.setHours(0, 0, 0, 0))
     this.__showPeriodDays = calculateDays(start, end)
+    return this
+  }
+
+  todayTo(days) {
+    if (days < 0) {
+      throw new Error('Days must be positive')
+    }
+
+    const today = new Date()
+    const end = addDays(today, days)
+    this.period(today, end)
     return this
   }
 
@@ -218,8 +230,8 @@ export class GanttChart {
           continue
         }
 
-        const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'day'
-        const cell = { quantity: 1, text: '', type }
+        const typeClass = this.__getClassTypeDay(currentDate)
+        const cell = { quantity: 1, text: '', type: typeClass }
         rows.push(cell)
       }
 
@@ -250,12 +262,12 @@ export class GanttChart {
     const months = []
     for (let i = 0; i < this.__showPeriodDays; i++) {
       const currentDate = addDays(this.__startGanttChart, i)
+      const typeClass = this.__getClassTypeDay(currentDate)
 
-      const type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'day'
-      dayOfMonthCells.push({ quantity: 1, text: currentDate.getDate(), type })
+      dayOfMonthCells.push({ quantity: 1, text: currentDate.getDate(), type: typeClass })
 
       const day = this.__translations.daysOfWeek[DAYS_OF_WEEK_ARRAY[currentDate.getDay()]]
-      dayOfWeekCells.push({ quantity: 1, text: day, type })
+      dayOfWeekCells.push({ quantity: 1, text: day, type: typeClass })
 
       const month = MONTHS_OF_YEAR_ARRAY[currentDate.getMonth()]
       if (months[months.length - 1]?.name !== month) {
@@ -278,5 +290,13 @@ export class GanttChart {
     if (this.__isActiveWeekDays) {
       dayOfWeekCells.map(row => this.__createCellTemplateMatrix(row.quantity, row.text, row.type))
     }
+  }
+
+  __getClassTypeDay(day) {
+    const isToday = day.toDateString() === new Date().toDateString()
+    if (isToday) return 'today'
+
+    const type = day.getDay() === 0 || day.getDay() === 6 ? 'weekend' : 'day'
+    return type
   }
 }

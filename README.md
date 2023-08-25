@@ -26,7 +26,7 @@ Create a html element
 ```
 
 ```javascript
-import { GanttChart } from '@miyax/ganttjs'
+import { GanttChart, ES } from '@miyax/ganttjs'
 import '@miyax/ganttjs/src/theme/default.css'
 
 // Define the tasks
@@ -64,6 +64,7 @@ gantt
 gantt
   .element(ganttChartHtmlElement) // set the element
   .period(startGanttChart, endGanttChart) // show the period from 2023/08/01 to 2023/08/31
+  // .todayTo(2) // show the period from today to 2 days after
   .tasks(tasks) // add the tasks
   .widthHeader('350px') // set the width of the header, default is 150px
   .withWeekDays() // show the week days

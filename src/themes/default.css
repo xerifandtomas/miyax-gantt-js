@@ -37,6 +37,10 @@
     background: transparent;
 }
 
+.gjs__cell-today {
+    background: rgba(241, 230, 180, 0.5);
+}
+
 .gjs__cell-weekend {
     background-color: #ecebeb;
 }
