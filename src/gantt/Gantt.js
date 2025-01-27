@@ -1,4 +1,4 @@
-import { calculateDays, addDays, DAYS_OF_WEEK_ARRAY, MONTHS_OF_YEAR_ARRAY } from './Utils.js'
+import { calculateDays, addDays, DAYS_OF_WEEK_ARRAY, MONTHS_OF_YEAR_ARRAY, carculateColorTextFromColorBackground } from './Utils.js'
 import translate from '../lang/en.js'
 
 export class GanttChart {
@@ -20,9 +20,10 @@ export class GanttChart {
 
   TYPE_CELL = {
     header: 'gjs__cell-header',
+    headertask: 'gjs__cell-header-task',
     day: 'gjs__row-cell--day',
     today: 'gjs__row-cell--day gjs__cell-today',
-    weekend: 'gjs__cell-day gjs__cell-weekend',
+    weekend: 'gjs__row-cell--day gjs__cell-weekend',
     month: 'gjs__cell-month',
     task: 'gjs__cell-task',
     time: 'gjs__row-cell--time',
@@ -49,7 +50,19 @@ export class GanttChart {
   }
 
   tasks(tasks) {
-    this.__tasks = tasks
+    this.__tasks = tasks.map((task) => {
+      if (!(task.start instanceof Date) || !(task.end instanceof Date)) {
+        throw new Error('Start and end must be Date')
+      }
+      if (task.start > task.end) {
+        throw new Error('Start must be less than end')
+      }
+      return {
+        ...task,
+        start: new Date(task.start.setHours(0, 0, 0, 0)),
+        end: new Date(task.end.setHours(0, 0, 0, 0)),
+      }
+    })
     return this
   }
 
@@ -181,7 +194,8 @@ export class GanttChart {
 
   __createCellTemplateMatrix(length, text, type, color, id) {
     const { startColumn, endColumn, startRow, endRow } = this.__getMatrixArea(length, 1)
-    const bgColor = color ? `background: linear-gradient(90deg, ${color}33 0%, ${color} 100%);` : ''
+    const bgColor = color ? `background: linear-gradient(90deg, ${color}75 0%, ${color} 100%);` : ''
+    const textColor = color ? `color: ${carculateColorTextFromColorBackground(color)};` : ''
     const dataId = id ? `data-id="${id}"` : ''
     const typeClass = this.TYPE_CELL[type] ?? ''
 
@@ -193,6 +207,7 @@ export class GanttChart {
             grid-column: ${startColumn} / ${endColumn};
             grid-row: ${startRow} / ${endRow};
             ${bgColor}
+            ${textColor}
             "
           >
             <span
@@ -210,7 +225,7 @@ export class GanttChart {
       const taskDuration = calculateDays(task.start, task.end)
       const rows = []
       if (this.__isActiveHeaders) {
-        const cell = { quantity: 1, text: task.name, type: 'header', color: task.color, id: task.id }
+        const cell = { quantity: 1, text: task.name, type: 'headertask', color: task.color, id: task.id }
         rows.push(cell)
       }
 
@@ -271,13 +286,13 @@ export class GanttChart {
 
       const month = MONTHS_OF_YEAR_ARRAY[currentDate.getMonth()]
       if (months[months.length - 1]?.name !== month) {
-        months.push({ name: month, quantity: 0 })
+        months.push({ name: month, quantity: 0, year: currentDate.getFullYear() })
       }
       months[months.length - 1].quantity++
     }
 
     months.forEach((month) => {
-      const monthName = this.__translations.monthsOfYear[month.name]
+      const monthName = `${this.__translations.monthsOfYear[month.name]} ${month.year}`
       monthCells.push({ quantity: month.quantity, text: monthName, type: 'month' })
     })
 
